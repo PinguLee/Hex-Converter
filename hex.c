@@ -3,7 +3,7 @@
 #include <string.h>
 
 int main(void) {
-    char command[5];
+    char command[7];
     char string_data[256];
 
     while (1) {
@@ -23,7 +23,7 @@ int main(void) {
         } else if (strcmp(command, "/exit") == 0) {
             break;
         } else {
-            printf("help? : /help");
+            printf("help? : /help\n");
         }
     }
 
