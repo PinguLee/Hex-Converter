@@ -3,14 +3,12 @@
 #include <string.h>
 
 int main(void) {
-    char command[7];
+    char command[256];
     char string_data[256];
 
     while (1) {
         printf("> ");
         fgets(command, sizeof(command), stdin);
-
-        command[strcspn(command, "\n")] = '\0';
 
         if (strcmp(command, "/input") == 0) {
             printf(" -> ");
