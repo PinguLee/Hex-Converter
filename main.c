@@ -38,18 +38,28 @@ void hxd(const wchar_t *string_data) {
     for (int i = 0; string_data[i] != L'\0'; i++) {
         unsigned char *bytes = (unsigned char *)&string_data[i];
         
-        ascii[ascii_count] = bytes[1];
-        ascii[ascii_count + 1] = bytes[0];
-        ascii_count += 2;
+        // 아스키 코드는 0x20~0x7E만 표시함 (나머지는 . 으로 표시)
+        if (bytes[0] >= 0x20 && bytes[0] <= 0x7E) {
+            ascii[ascii_count++] = bytes[0];
+        } else {
+            ascii[ascii_count++] = '.';
+        }
 
-        printf("%c", ascii[i]);
+        if (bytes[1] >= 0x20 && bytes[1] <= 0x7E) {
+            ascii[ascii_count++] = bytes[1];
+        } else {
+            ascii[ascii_count++] = '.';
+        }
+
         printf("%02x %02x ", bytes[1], bytes[0]); // 리틀 엔디언처럼 보이게 출력
         count++;
 
         if (count % 8 == 0) {
-            printf("\n");
+            printf("| %s\n", ascii);  // ASCII 값을 출력
             offset += 16;
             printf("%08x | ", offset);
+            memset(ascii, 0, sizeof(ascii));  // ASCII 배열 초기화
+            ascii_count = 0;
         }
     }
 
