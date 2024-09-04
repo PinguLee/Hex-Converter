@@ -2,6 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+// hex로 변환
+void hxd(const char * data) {
+    while(*data) {
+        printf("%02x ", (unsigned char)*data);
+        data++;
+    }
+}
+
 int main(void) {
     char command[256];
     char string_data[256];
@@ -15,9 +23,10 @@ int main(void) {
             printf(" -> ");
             fgets(string_data, sizeof(string_data), stdin);
             string_data[strcspn(string_data, "\n")] = 0;
-            printf("%s\n", string_data);
+            // printf("%s\n", string_data);
+            hxd(string_data);
         
-        } else if (strncmp(command, "/save ", 6) == 0) {
+        } else if (strstr(command, "/save ") == command) {
             char *filename = command + 6;
             FILE *file = fopen(filename, "w");
             if (file != NULL) {
