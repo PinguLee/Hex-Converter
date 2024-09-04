@@ -22,12 +22,17 @@ void hxd(const wchar_t *string_data) {
 }
 
 int main(void) {
-    char command[256];
+    char command[6];
     wchar_t string_data[256];
 
     while (1) {
         printf("> ");
-        scanf("%s", command);
+        
+        // BOF 보완
+        if (scanf("%6s", command) != 1) {
+            printf("최대 6글자 입력\n");
+            continue;
+        }
 
         if (strcmp(command, "/input") == 0) {
             printf(" -> ");
@@ -48,7 +53,7 @@ int main(void) {
         } else if (strcmp(command, "/exit") == 0) {
             break;
         } else {
-            printf("retry");
+            printf("다시 입력하세요.");
         }
 
     }
