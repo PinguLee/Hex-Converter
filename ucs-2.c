@@ -12,7 +12,7 @@ int main(void) {
     wscanf(L"%ls", string_data);
         
     for (int i = 0; string_data[i] != L'\0'; i++) {
-        wprintf(L"%x ", string_data[i]);
+        wprintf(L"%04x ", string_data[i]);
     }
     wprintf(L"\n");
     return 0;
