@@ -4,7 +4,7 @@
 #include <wchar.h>
 
 /*
-// hexë¡œ ë³€í™˜ old
+// hex·Î º¯È¯ old
 void hxd(const char * data) {
     while(*data) {
         printf("%02x", (unsigned char)*data);
@@ -14,23 +14,33 @@ void hxd(const char * data) {
 */
 
 void hxd(const wchar_t *string_data) {
+    int count = 0;
     for (int i = 0; string_data[i] != L'\0'; i++) {
         unsigned char *bytes = (unsigned char *)&string_data[i];
-        printf("%02x %02x ", bytes[1], bytes[0]); // ë¦¬í‹€ ì—”ë””ì–¸ ì²˜ëŸ¼ ë³´ì´ê²Œ ì¶œë ¥
+        printf("%02x %02x ", bytes[1], bytes[0]); // ¸®Æ² ¿£µğ¾ğÃ³·³ º¸ÀÌ°Ô Ãâ·Â
+        count++;
+
+        if (count % 8 == 0) {
+            printf("\n");
+        }
     }
-    printf("\n");
+
+    // ¸¶Áö¸· ÁÙ¹Ù²Ş Ã³¸®
+    if (count % 8 != 0) {
+        printf("\n");
+    }
 }
 
 int main(void) {
-    char command[6];
+    char command[7];
     wchar_t string_data[256];
 
     while (1) {
         printf("> ");
         
-        // BOF ë³´ì™„
+        // BOF º¸¿Ï
         if (scanf("%6s", command) != 1) {
-            printf("ìµœëŒ€ 6ê¸€ì ì…ë ¥\n");
+            printf("ÃÖ´ë 6±ÛÀÚ ÀÔ·Â\n");
             continue;
         }
 
@@ -53,7 +63,7 @@ int main(void) {
         } else if (strcmp(command, "/exit") == 0) {
             break;
         } else {
-            printf("ë‹¤ì‹œ ì…ë ¥í•˜ì„¸ìš”.");
+            printf("´Ù½Ã ÀÔ·ÂÇÏ¼¼¿ä.\n");
         }
 
     }
