@@ -3,8 +3,8 @@
 #include <string.h>
 
 int main(void) {
-    char command[256] = {0};
-    char string_data[256] = {0};
+    char command[256];
+    char string_data[256];
 
     while (1) {
         printf("> ");
@@ -16,8 +16,17 @@ int main(void) {
             fgets(string_data, sizeof(string_data), stdin);
             string_data[strcspn(string_data, "\n")] = 0;
             printf("%s\n", string_data);
+        
+        } else if (strcmp(command, "/save") == 0) {
+            FILE *file = fopen("output.txt", "w");
+            if (file != NULL) {
+                fprintf(file, "%s\n", string_data);
+                fclose(file);
+                printf("save success\n");
+            } else {
+                printf("error\n");
+            }
 
-            memset(string_data, 0, sizeof(string_data));
         } else if (strcmp(command, "/help") == 0) {
             printf("command\n");
             printf("/input : input\n");
@@ -28,7 +37,6 @@ int main(void) {
             printf("help? : /help\n");
         }
 
-        memset(command, 0, sizeof(command));
     }
 
     return 0;
