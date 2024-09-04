@@ -30,11 +30,19 @@ void hxd(const wchar_t *string_data) {
 void hxd(const wchar_t *string_data) {
     int count = 0;
     int offset = 0;
+    int ascii_count = 0;
+    char ascii[999];
 
     printf("%08x | ", offset);
 
     for (int i = 0; string_data[i] != L'\0'; i++) {
         unsigned char *bytes = (unsigned char *)&string_data[i];
+        
+        ascii[ascii_count] = bytes[1];
+        ascii[ascii_count + 1] = bytes[0];
+        ascii_count += 2;
+
+        printf("%c", ascii[i]);
         printf("%02x %02x ", bytes[1], bytes[0]); // 리틀 엔디언처럼 보이게 출력
         count++;
 
