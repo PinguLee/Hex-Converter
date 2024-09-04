@@ -17,24 +17,21 @@ int main(void) {
             string_data[strcspn(string_data, "\n")] = 0;
             printf("%s\n", string_data);
         
-        } else if (strcmp(command, "/save") == 0) {
-            FILE *file = fopen("output.txt", "w");
+        } else if (strncmp(command, "/save ", 6) == 0) {
+            char *filename = command + 6;
+            FILE *file = fopen(filename, "w");
             if (file != NULL) {
-                fprintf(file, "%s\n", string_data);
+                fprintf(file, "%s", string_data);
                 fclose(file);
                 printf("save success\n");
             } else {
                 printf("error\n");
             }
 
-        } else if (strcmp(command, "/help") == 0) {
-            printf("command\n");
-            printf("/input : input\n");
-            printf("/exit : exit\n");
         } else if (strcmp(command, "/exit") == 0) {
             break;
         } else {
-            printf("help? : /help\n");
+            printf("retry");
         }
 
     }
