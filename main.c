@@ -15,26 +15,23 @@ void hxd(const char * data) {
 
 void hxd(const wchar_t *string_data) {
     for (int i = 0; string_data[i] != L'\0'; i++) {
-        wprintf(L"%04x ", string_data[i]);
+        unsigned char *bytes = (unsigned char *)&string_data[i];
+        printf("%02x %02x ", bytes[1], bytes[0]); // 리틀 엔디언 처럼 보이게 출력
     }
-    wprintf(L"\n");
+    printf("\n");
 }
 
 int main(void) {
     char command[256];
     wchar_t string_data[256];
 
-    wprintf(L"\n");
-
     while (1) {
         printf("> ");
-        fgets(command, sizeof(command), stdin);
-        command[strcspn(command, "\n")] = 0;
+        scanf("%s", command);
 
         if (strcmp(command, "/input") == 0) {
             printf(" -> ");
             wscanf(L"%ls", string_data);
-            // printf("%s\n", string_data);
             hxd(string_data);
         
         } else if (strstr(command, "/save ") == command) {
