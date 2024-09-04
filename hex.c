@@ -9,11 +9,13 @@ int main(void) {
     while (1) {
         printf("> ");
         fgets(command, sizeof(command), stdin);
+        command[strcspn(command, "\n")] = 0;
 
         if (strcmp(command, "/input") == 0) {
             printf(" -> ");
             fgets(string_data, sizeof(string_data), stdin);
-            printf("%s", string_data);
+            string_data[strcspn(string_data, "\n")] = 0;
+            printf("%s\n", string_data);
         } else if (strcmp(command, "/help") == 0) {
             printf("command\n");
             printf("/input : input\n");
