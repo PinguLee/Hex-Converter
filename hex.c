@@ -2,17 +2,32 @@
 #include <stdlib.h>
 #include <string.h>
 
-// hex로 변환
+/*
+// hex로 변환 old
 void hxd(const char * data) {
     while(*data) {
-        printf("%02x ", (unsigned char)*data);
+        printf("%02x", (unsigned char)*data);
         data++;
     }
+}
+*/
+
+void hxd(const char *data) {
+    int count = 0;
+    while (*data) {
+        printf("%x", (unsigned char)*data);
+        count++;
+        if (count % 2 == 0) {
+            printf(" ");
+        }
+        data++;
+    }
+    printf("\n");
 }
 
 int main(void) {
     char command[256];
-    char string_data[256];
+    wchar_t string_data[256];
 
     while (1) {
         printf("> ");
@@ -21,8 +36,7 @@ int main(void) {
 
         if (strcmp(command, "/input") == 0) {
             printf(" -> ");
-            fgets(string_data, sizeof(string_data), stdin);
-            string_data[strcspn(string_data, "\n")] = 0;
+            wscanf(L"%s", string_data);
             // printf("%s\n", string_data);
             hxd(string_data);
         
