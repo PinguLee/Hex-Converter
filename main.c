@@ -15,6 +15,8 @@ void hxd(const char * data) {
 
 void hxd(const wchar_t *string_data) {
     int count = 0;
+    int offset = 0;
+
     for (int i = 0; string_data[i] != L'\0'; i++) {
         unsigned char *bytes = (unsigned char *)&string_data[i];
         printf("%02x %02x ", bytes[1], bytes[0]); // 리틀 엔디언처럼 보이게 출력
@@ -22,6 +24,8 @@ void hxd(const wchar_t *string_data) {
 
         if (count % 8 == 0) {
             printf("\n");
+            offset += 16;
+            printf("%08x | ", offset);
         }
     }
 
