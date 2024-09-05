@@ -55,19 +55,19 @@ void hxd(const wchar_t *string_data) {
         count++;
 
         if (count % 8 == 0) {
-            ascii[ascii_count] = '\0';  // Null-terminator 추가
-            printf("| %s\n", ascii);    // ASCII 값을 출력
+            ascii[ascii_count] = '\0';
+            printf("| %s\n", ascii);
             offset += 16;
             printf("%08x | ", offset);
-            memset(ascii, ' ', sizeof(ascii) - 1);  // ASCII 배열을 공백으로 초기화
+            memset(ascii, ' ', sizeof(ascii) - 1);
             ascii_count = 0;
         }
     }
 
     if (count % 8 != 0) {
         ascii[ascii_count] = '\0';
-        int padding = (8 - (count % 8)) * 5;
-        printf("%*s| %s\n", padding, "", ascii);
+        int padding = (8 - (count % 8)) * 4 + 1;
+        printf("%-*s| %s\n", padding, "", ascii);
     }
 }
 
