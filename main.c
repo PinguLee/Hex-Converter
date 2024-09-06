@@ -3,42 +3,17 @@
 #include <string.h>
 #include <wchar.h>
 
-/*
-void hxd(const wchar_t *string_data) {
-    int count = 0;
-    int offset = 0;
-
-    for (int i = 0; string_data[i] != L'\0'; i++) {
-        unsigned char *bytes = (unsigned char *)&string_data[i];
-        printf("%02x %02x ", bytes[1], bytes[0]); // 리틀 엔디언처럼 보이게 출력
-        count++;
-
-        if (count % 8 == 0) {
-            printf("\n");
-            offset += 16;
-            printf("%08x | ", offset);
-        }
-    }
-
-    // 마지막 줄바꿈 처리
-    if (count % 8 != 0) {
-        printf("\n");
-    }
-}
-*/
-
-void hxd(const wchar_t *string_data) {
+void hxd(const wchar_t *string_data, FILE *output) {
     int count = 0;
     int offset = 0;
     int ascii_count = 0;
     char ascii[999];
 
-    printf("%08x | ", offset);
+    fprintf(output, "%08x | ", offset);
 
     for (int i = 0; string_data[i] != L'\0'; i++) {
         unsigned char *bytes = (unsigned char *)&string_data[i];
         
-        // 아스키 코드는 0x20~0x7E만 표시함 (나머지는 . 으로 표시)
         if (bytes[0] >= 0x20 && bytes[0] <= 0x7E) {
             ascii[ascii_count++] = bytes[0];
         } else {
@@ -51,58 +26,65 @@ void hxd(const wchar_t *string_data) {
             ascii[ascii_count++] = '.';
         }
 
-        printf("%02x %02x ", bytes[1], bytes[0]); // 리틀 엔디언처럼 보이게 출력
+        fprintf(output, "%02x %02x ", bytes[1], bytes[0]);
         count++;
 
         if (count % 8 == 0) {
-            printf("| %s\n", ascii);  // ASCII 값을 출력
+            fprintf(output, "| %s\n", ascii);
             offset += 16;
-            printf("%08x | ", offset);
-            memset(ascii, 0, sizeof(ascii));  // ASCII 배열 초기화
+            fprintf(output, "%08x | ", offset);
+            memset(ascii, 0, sizeof(ascii));
             ascii_count = 0;
         }
     }
 
     if (count % 8 != 0) {
-        printf("\n");
+        fprintf(output, "\n");
     }
 }
 
 int main(void) {
-    char command[7];
+    char command[256];
     wchar_t string_data[256];
 
     while (1) {
         printf("> ");
         
-        // BOF 보완
-        if (scanf("%6s", command) != 1) {
-            printf("최대 6글자 입력\n");
+        if (fgets(command, sizeof(command), stdin) == NULL) {
+            printf("명령어 입력 오류\n");
             continue;
         }
+
+        command[strcspn(command, "\n")] = '\0'; // 개행 문자 제거
 
         if (strcmp(command, "/input") == 0) {
             printf(" -> ");
             wscanf(L"%ls", string_data);
-            hxd(string_data);
+            hxd(string_data, stdout);
         
         } else if (strstr(command, "/save ") == command) {
-            char *filename = command + 6;
-            FILE *file = fopen(filename, "w");
-            if (file != NULL) {
-                fprintf(file, "%s", string_data);
-                fclose(file);
-                printf("save success\n");
+            char *filename = strtok(command + 6, " ");
+            char *input_string = strtok(NULL, "");
+
+            if (filename != NULL && input_string != NULL) {
+                FILE *file = fopen(filename, "w");
+                if (file != NULL) {
+                    mbstowcs(string_data, input_string, strlen(input_string) + 1);
+                    hxd(string_data, file);
+                    fclose(file);
+                    printf("save success\n");
+                } else {
+                    printf("파일 저장 중 오류 발생\n");
+                }
             } else {
-                printf("error\n");
+                printf("명령어 오류\n");
             }
 
         } else if (strcmp(command, "/exit") == 0) {
             break;
         } else {
-            printf("다시 입력하세요.\n");
+            printf("명령어 오류\n");
         }
-
     }
 
     return 0;
